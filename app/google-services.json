@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "345971471422",
+    "project_id": "onlineattendanceproject-385c9",
+    "storage_bucket": "onlineattendanceproject-385c9.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:345971471422:android:c50cc897366427e5adcd6f",
+        "android_client_info": {
+          "package_name": "com.example.onlineattendanceproject"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "345971471422-l61um4kdn32jjns3cjoc9bcmr4atmksd.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCEcRdyETx5sLUDDEiceTlJyWaLCSUOzO8"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "345971471422-l61um4kdn32jjns3cjoc9bcmr4atmksd.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
