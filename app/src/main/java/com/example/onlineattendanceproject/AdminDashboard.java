@@ -92,6 +92,14 @@ public class AdminDashboard extends AppCompatActivity {
                         break;
 
 
+                    case R.id.nav_show_attTech:
+
+                        Intent attIntent= new Intent(AdminDashboard.this,AdminTeacherAttListSCR.class);
+                        startActivity(attIntent);
+                        drayerLayout.closeDrawer(GravityCompat.START);
+                        break;
+
+
 
                     case R.id.nav_logout:
                         Toast.makeText(AdminDashboard.this, "Logout", Toast.LENGTH_SHORT).show();

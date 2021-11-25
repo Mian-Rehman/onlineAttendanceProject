@@ -131,6 +131,8 @@ public class TeacherAttendanceSCR extends AppCompatActivity {
 
                 if (distance<6.0)
                 {
+                    Intent comp_intent=new Intent(TeacherAttendanceSCR.this,TeacherAttendanceCompleteSCR.class);
+                    startActivity(comp_intent);
                     //  result_text.setText("Result : Same Faces");
                     //  Intent comp_intent=new Intent(TeacherAttendenceSCR.this,TeacherAttendanceCompleteSCR.class);
                     //  startActivity(comp_intent);

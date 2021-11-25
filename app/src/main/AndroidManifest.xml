@@ -5,7 +5,10 @@
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.CAMERA" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"/>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.MANAGE_EXTERNAL_STORAGE"
+        tools:ignore="ScopedStorage" />
     <uses-permission android:name="android.permission.ACCESS_WIFI_STATE" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
@@ -17,7 +20,9 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.OnlineAttendanceProject"
         tools:ignore="ExtraText">
-        <activity android:name=".TeacherTakeAttendanceStudent"></activity>
+        <activity android:name=".CreatePDFTeacherSCR"></activity>
+        <activity android:name=".AdminTeacherAttListSCR" />
+        <activity android:name=".TeacherTakeAttendanceStudent" />
         <activity android:name=".TeacherLoginScreen" />
         <activity android:name=".TeacherForgotScreen" />
         <activity android:name=".TeacherDashboard" />
@@ -36,9 +41,7 @@
         <activity android:name=".AdminStudentImageSCR" />
         <activity android:name=".AdminShowStudents" />
         <activity android:name=".AdminLoginScreen" />
-        <activity android:name=".AdminDashboard" >
-
-        </activity>
+        <activity android:name=".AdminDashboard" />
         <activity android:name=".AdminAddStudentProf" />
         <activity android:name=".MainActivity">
             <intent-filter>

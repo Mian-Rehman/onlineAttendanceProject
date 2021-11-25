@@ -59,6 +59,8 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
 
     }
 
+
+
     private String getTimeWithAmPm()
     {
         return new SimpleDateFormat("hh:mm a", Locale.getDefault()).format(new Date());
@@ -95,7 +97,7 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
 
         DatabaseReference reference= FirebaseDatabase.getInstance().getReference("attendanceTeacher");
 
-        DatabaseReference monRef =FirebaseDatabase.getInstance().getReference("monthTeacherAttendance");
+
 
         reference.addValueEventListener(new ValueEventListener() {
             @Override
@@ -119,4 +121,6 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
 
 
     }
+
+
 }

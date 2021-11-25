@@ -25,9 +25,9 @@
         android:id="@+id/nav_show_student"
         />
 
-    <item android:title="Show Attendance"
+    <item android:title="Teacher Attendance list"
         android:icon="@drawable/ic_show_student"
-        android:id="@+id/nav_show_att"
+        android:id="@+id/nav_show_attTech"
         />
 
     <item android:title="Logout"
