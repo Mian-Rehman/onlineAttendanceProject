@@ -139,8 +139,8 @@ public class TeacherAttendanceSCR extends AppCompatActivity {
                 }
                 else
                 {
-                    Intent comp_intent=new Intent(TeacherAttendanceSCR.this,TeacherAttendanceCompleteSCR.class);
-                    startActivity(comp_intent);
+                    Toast.makeText(TeacherAttendanceSCR.this, "Face Not Match", Toast.LENGTH_SHORT).show();
+                    result_text.setText("Result : Face Not Match Try Again");
 
                     //    Intent back_intent=new Intent(TeacherAttendenceSCR.this,TeacherDashboardScreen.class);
                     //    startActivity(back_intent);
@@ -163,13 +163,16 @@ public class TeacherAttendanceSCR extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 teacimage = snapshot.child(teacherId).child("newImage").getValue(String.class);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 byte[] bytes = byteArrayOutputStream.toByteArray();
                 bytes= Base64.decode(teacimage, Base64.DEFAULT);
+
                 oribitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
                 imageFromDatabase.setImageBitmap(oribitmap);
-                face_detector(oribitmap,"original");
+
+              //  face_detector(oribitmap,"original");
             }
 
             @Override

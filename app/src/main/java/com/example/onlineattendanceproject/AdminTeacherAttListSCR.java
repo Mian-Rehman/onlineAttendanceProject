@@ -80,8 +80,9 @@ public class AdminTeacherAttListSCR extends AppCompatActivity {
       //  DatabaseReference zone1NameRef = zon1.child("teacherId");
      //   DatabaseReference zon = zone1NameRef.child("teacherPresent");
 
+        btn_pdf.setVisibility(View.INVISIBLE);
 
-        btn_pdf.setOnClickListener(new View.OnClickListener() {
+      /*  btn_pdf.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -92,6 +93,8 @@ public class AdminTeacherAttListSCR extends AppCompatActivity {
 
             }
         });
+
+       */
 
 
         btn_search.setOnClickListener(new View.OnClickListener() {

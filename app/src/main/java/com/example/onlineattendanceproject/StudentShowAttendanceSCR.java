@@ -1,6 +1,7 @@
 package com.example.onlineattendanceproject;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,17 +9,26 @@ import androidx.recyclerview.widget.RecyclerView;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.TextUtils;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import com.example.onlineattendanceproject.Model.AttendanceAdapter;
 import com.example.onlineattendanceproject.Model.StudentAttendaceClass;
+import com.google.firebase.database.ChildEventListener;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+
+import org.checkerframework.checker.units.qual.C;
 
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -33,11 +43,17 @@ public class StudentShowAttendanceSCR extends AppCompatActivity {
     private AttendanceAdapter mAttendanceAdapter;
     private List<StudentAttendaceClass> mDataList;
 
+    Spinner ed_search_attendance;
+    Button btn_search;
+
     FirebaseDatabase database;
     DatabaseReference myRef;
 
     ImageView st_att_back;
 
+    String date;
+    String month;
+    String value;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,6 +61,8 @@ public class StudentShowAttendanceSCR extends AppCompatActivity {
         setContentView(R.layout.activity_student_show_attendance_s_c_r);
 
         st_att_back=findViewById(R.id.st_att_back);
+        ed_search_attendance=findViewById(R.id.ed_search_attendance);
+        btn_search=findViewById(R.id.btn_search);
 
 
         st_att_back.setOnClickListener(new View.OnClickListener() {
@@ -56,31 +74,96 @@ public class StudentShowAttendanceSCR extends AppCompatActivity {
             }
         });
 
+        ArrayAdapter<CharSequence> adapter = ArrayAdapter.createFromResource(
+                this,R.array.MonthArray, android.R.layout.simple_spinner_item
+        );
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        ed_search_attendance.setAdapter(adapter);
 
 
+
+        date=getdateWithMonth()+" "+ getCurrentdateOnly();
+
+        ShowAttendace();
+
+
+        ed_search_attendance.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+
+                value = parent.getItemAtPosition(position).toString();
+
+                Toast.makeText(parent.getContext(), value, Toast.LENGTH_SHORT).show();
+
+                ShowMonthAttendance();
+
+
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+
+            }
+        });
+
+
+
+    }
+
+    private void ShowMonthAttendance()
+    {
 
         SharedPreferences sp=getSharedPreferences("STUDENT_DATA",MODE_PRIVATE);
         String studentId= sp.getString("studentID","").toString();
 
-        // Toast.makeText(StudentShowAttendanceSCR.this, ""+studentId, Toast.LENGTH_SHORT).show();
-
-
-        String date=getdateWithMonth()+" "+ getCurrentdateOnly();
-
-
         DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("attendanceStudent");
-        DatabaseReference zone1Ref = zonesRef.child("date");
-        DatabaseReference zon1 = zone1Ref.child(date);
-        DatabaseReference zone1NameRef = zon1.child("studentId");
-        DatabaseReference zon = zone1NameRef.child("studentPresent");
+        DatabaseReference zone1Ref = zonesRef.child(studentId);
+        DatabaseReference zon1 = zone1Ref.child(value);
+
+        recyclerView_showAtt=findViewById(R.id.recyclerView_showAtt);
+        //   database = FirebaseDatabase.getInstance();
+        //   myRef = database.getReference("attendanceStudent");
+        recyclerView_showAtt.setHasFixedSize(true);
+        recyclerView_showAtt.setLayoutManager(new LinearLayoutManager(this));
 
 
-    /*
-        zon.addValueEventListener(new ValueEventListener() {
+        mDataList=new ArrayList<>();
+        mAttendanceAdapter=new AttendanceAdapter(this,mDataList);
+        recyclerView_showAtt.setAdapter(mAttendanceAdapter);
+
+
+        zon1.addChildEventListener(new ChildEventListener() {
             @Override
-            public void onDataChange(@NonNull DataSnapshot snapshot) {
+            public void onChildAdded(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
-                Toast.makeText(StudentShowAttendanceSCR.this, ""+snapshot.getValue().toString(), Toast.LENGTH_SHORT).show();
+                if (snapshot.exists())
+                {
+                    StudentAttendaceClass datalcass = snapshot.getValue(StudentAttendaceClass.class);
+
+
+                        mDataList.add(datalcass);
+                        mAttendanceAdapter.notifyDataSetChanged();
+                }
+                else
+                {
+                    Toast.makeText(StudentShowAttendanceSCR.this, "No Attendance...!", Toast.LENGTH_SHORT).show();
+                }
+
+
+            }
+
+            @Override
+            public void onChildChanged(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
+
+            }
+
+            @Override
+            public void onChildRemoved(@NonNull DataSnapshot snapshot) {
+
+            }
+
+            @Override
+            public void onChildMoved(@NonNull DataSnapshot snapshot, @Nullable String previousChildName) {
 
             }
 
@@ -90,8 +173,18 @@ public class StudentShowAttendanceSCR extends AppCompatActivity {
             }
         });
 
-     */
+    }
 
+    private void ShowAttendace()
+    {
+        SharedPreferences sp=getSharedPreferences("STUDENT_DATA",MODE_PRIVATE);
+        String studentId= sp.getString("studentID","").toString();
+
+        DatabaseReference zonesRef = FirebaseDatabase.getInstance().getReference("attendanceStudent");
+        DatabaseReference zone1Ref = zonesRef.child("date");
+        DatabaseReference zon1 = zone1Ref.child(date);
+        DatabaseReference zone1NameRef = zon1.child("studentId");
+        DatabaseReference zon = zone1NameRef.child("studentPresent");
 
         recyclerView_showAtt=findViewById(R.id.recyclerView_showAtt);
         //   database = FirebaseDatabase.getInstance();
@@ -150,6 +243,7 @@ public class StudentShowAttendanceSCR extends AppCompatActivity {
 
             }
         });
+
 
 
     }

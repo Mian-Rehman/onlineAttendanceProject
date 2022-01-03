@@ -25,6 +25,28 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
 
     Button btn_com_dash_tech,btn_com_logout_tech;
 
+    String date;
+
+    ValueEventListener valueEventListener;
+
+    DatabaseReference reference;
+
+    String parentcounter;
+    int count;
+
+
+
+
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+        reference.removeEventListener(valueEventListener);
+
+
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -33,13 +55,45 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
         btn_com_dash_tech=findViewById(R.id.btn_com_dash_tech);
         btn_com_logout_tech=findViewById(R.id.btn_com_logout_tech);
 
+        uploadAttendaceToDatabase();
+
+        CounterCall();
+
+
+
+
 
         btn_com_logout_tech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent backIntent=new Intent(TeacherAttendanceCompleteSCR.this,ConfirmScreen.class);
-                startActivity(backIntent);
-                finish();
+
+                uploadCustomAttendance();
+
+                DatabaseReference counter = FirebaseDatabase.getInstance().getReference("Counter");
+
+                counter.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        parentcounter = snapshot.child("value").getValue(String.class);
+
+                        count = Integer.parseInt(parentcounter);
+                        count=count+1;
+                        parentcounter = String.valueOf(count);
+                        counter.child("value").setValue(parentcounter);
+
+                        Intent backIntent=new Intent(TeacherAttendanceCompleteSCR.this,ConfirmScreen.class);
+                        startActivity(backIntent);
+                        finish();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
             }
         });
 
@@ -47,18 +101,97 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
         btn_com_dash_tech.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent dashIntent=new Intent(TeacherAttendanceCompleteSCR.this,TeacherDashboard.class);
-                startActivity(dashIntent);
-                finish();
+
+                uploadCustomAttendance();
+
+                DatabaseReference counter = FirebaseDatabase.getInstance().getReference("Counter");
+
+                counter.addListenerForSingleValueEvent(new ValueEventListener() {
+                    @Override
+                    public void onDataChange(@NonNull DataSnapshot snapshot) {
+                        parentcounter = snapshot.child("value").getValue(String.class);
+
+                        count = Integer.parseInt(parentcounter);
+                        count=count+1;
+                        parentcounter = String.valueOf(count);
+                        counter.child("value").setValue(parentcounter);
+
+                        Intent dashIntent=new Intent(TeacherAttendanceCompleteSCR.this,TeacherDashboard.class);
+                        startActivity(dashIntent);
+                        finish();
+
+                    }
+
+                    @Override
+                    public void onCancelled(@NonNull DatabaseError error) {
+
+                    }
+                });
+
+
+
             }
         });
 
 
 
-        uploadAttendaceToDatabase();
+
+
+
 
     }
 
+    private void CounterCall()
+    {
+        DatabaseReference counter = FirebaseDatabase.getInstance().getReference("Counter");
+
+        counter.addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                parentcounter = snapshot.child("value").getValue(String.class);
+
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        });
+    }
+
+    public void uploadCustomAttendance()
+    {
+
+        SharedPreferences sp=getSharedPreferences("TEACHER_DATA",MODE_PRIVATE);
+        String teacherId=sp.getString("teacherID","");
+
+        String currentMonth=getdateWithMonth();
+        String currentDate = getCurrentdate();
+        String currentTime= getTimeWithAmPm();
+        String studentPresent="Present";
+
+         reference= FirebaseDatabase.getInstance().getReference("CustomAttendanceTeacher");
+
+
+
+        valueEventListener = new ValueEventListener() {
+            @Override
+            public void onDataChange(@NonNull DataSnapshot snapshot) {
+                TeacherAttendanceClass classData=new TeacherAttendanceClass(currentMonth,currentTime,teacherId,currentDate,studentPresent,date);
+                 String   key = reference.push().getKey();
+                reference.child(teacherId).child(currentMonth).child(parentcounter).setValue(classData);
+            }
+
+            @Override
+            public void onCancelled(@NonNull DatabaseError error) {
+
+            }
+        };
+        reference.addValueEventListener(valueEventListener);
+
+
+
+    }
 
 
     private String getTimeWithAmPm()
@@ -81,7 +214,7 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
         return new SimpleDateFormat("LLL", Locale.getDefault()).format(new Date());
     }
 
-    private void uploadAttendaceToDatabase()
+    public void uploadAttendaceToDatabase()
     {
 
 
@@ -92,14 +225,13 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
         String currentDate = getCurrentdate();
         String currentTime= getTimeWithAmPm();
         String studentPresent="Present";
-        String date=getdateWithMonth()+" "+ getCurrentdateOnly();
+         date=getdateWithMonth()+" "+ getCurrentdateOnly();
 
 
-        DatabaseReference reference= FirebaseDatabase.getInstance().getReference("attendanceTeacher");
+         reference= FirebaseDatabase.getInstance().getReference("attendanceTeacher");
 
 
-
-        reference.addValueEventListener(new ValueEventListener() {
+        valueEventListener = new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
 
@@ -116,7 +248,10 @@ public class TeacherAttendanceCompleteSCR extends AppCompatActivity {
             public void onCancelled(@NonNull DatabaseError error) {
 
             }
-        });
+        };
+        reference.addValueEventListener(valueEventListener);
+
+
 
 
 

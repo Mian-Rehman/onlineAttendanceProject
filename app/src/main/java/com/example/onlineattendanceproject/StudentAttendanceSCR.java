@@ -166,6 +166,7 @@ public class StudentAttendanceSCR extends AppCompatActivity {
                 else
                 {
 
+
                     Toast.makeText(StudentAttendanceSCR.this, "Face Not Match", Toast.LENGTH_SHORT).show();
                     result_text.setText("Result : Face Not Match Try Again");
 
@@ -189,6 +190,7 @@ public class StudentAttendanceSCR extends AppCompatActivity {
         reference.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot snapshot) {
+
                 studimage = snapshot.child(studentId).child("newImage").getValue(String.class);
                 ByteArrayOutputStream byteArrayOutputStream = new ByteArrayOutputStream();
                 byte[] bytes = byteArrayOutputStream.toByteArray();

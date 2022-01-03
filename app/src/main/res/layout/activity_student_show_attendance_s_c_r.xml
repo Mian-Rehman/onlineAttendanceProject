@@ -43,9 +43,27 @@
         android:padding="25dp"
         android:orientation="vertical">
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center"
+            >
+
+            <Spinner
+                android:id="@+id/ed_search_attendance"
+                android:layout_width="200dp"
+                android:layout_height="50dp"
+
+                />
+
+
+        </LinearLayout>
+
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/recyclerView_showAtt"
             android:layout_width="match_parent"
+            android:layout_marginTop="10dp"
             android:layout_height="match_parent"
             android:layout_marginRight="20dp"
             />
